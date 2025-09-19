@@ -1,37 +1,434 @@
 <!DOCTYPE html>
-<html lang="de" ng-app="cvApp" ng-controller="CVController">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohamed Mehdi Abid - CV Angular</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <title>Mohamed Mehdi Abid - CV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.05) 10px,
+                rgba(255,255,255,0.05) 20px
+            );
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .name {
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .title {
+            font-size: 1.3em;
+            opacity: 0.9;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95em;
+        }
+
+        .contact-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 0;
+            min-height: 600px;
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            padding: 40px 30px;
+            border-right: 3px solid #e9ecef;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #e74c3c;
+        }
+
+        .sidebar .section-title {
+            font-size: 1.2em;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .sidebar .section-title::after {
+            width: 30px;
+            height: 2px;
+        }
+
+        .experience-item {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .experience-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .company {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .position {
+            color: #3498db;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .description ul {
+            margin: 10px 0 10px 20px;
+        }
+
+        .description li {
+            margin-bottom: 5px;
+        }
+
+        .personal-info {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .personal-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .personal-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .value {
+            color: #555;
+        }
+
+        .languages {
+            display: grid;
+            gap: 15px;
+        }
+
+        .language-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .language-name {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .language-level {
+            background: #3498db;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .skills {
+            display: grid;
+            gap: 20px;
+        }
+
+        .skill-category {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .skill-category-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: #1976d2;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .hobbies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .hobby-item {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .hobby-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .education-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .school {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .degree {
+            color: #e74c3c;
+            font-weight: 600;
+            margin: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .name {
+                font-size: 2em;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="cv-container">
+    <div class="container">
         <header class="header">
             <div class="header-content">
-                <h1 class="name">{{ personalData.name }}</h1>
-                <p class="title">{{ personalData.title }}</p>
-                <div class="contact-grid">
-                    <div class="contact-item" ng-repeat="contact in contactInfo">
+                <h1 class="name">Mohamed Mehdi Abid</h1>
+                <p class="title">Bachelor Informatik Student</p>
+                <div class="contact-info">
+                    <div class="contact-item">
                         <svg class="contact-icon" viewBox="0 0 24 24">
-                            <path ng-attr-d="{{ contact.icon }}"></path>
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                         </svg>
-                        {{ contact.value }}
+                        medabi28@gmail.com
                     </div>
-                </div>
-            </div>
+                    <div class="contact-item">
+                        <svg class="contact-icon" viewBox="0 0 24 24">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                        </svg>
+                        01622750840
+                    </div>
+                    <div class="contact-item">
+                        <svg class="contact-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        Schenkendorfstr. 129, 32427 Minden
+                    </div>
+                    <a class="contact-item" href="https://github.com/MehdiAbid74" target="_blank" rel="noopener">
+    <svg class="contact-icon" viewBox="0 0 24 24">
+        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+    </svg>
+    GitHub : https://github.com/MehdiAbid74
+</a>
+
+                    <a class="contact-item" href="https://www.linkedin.com/in/mohamed-mehdi-abid-01883928b/" target="_blank" rel="noopener">
+    <svg class="contact-icon" viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+    </svg>
+    LinkedIn
+</a>
+
         </header>
 
-        <div class="main-layout">
+        <div class="main-content">
             <aside class="sidebar">
                 <section class="section">
                     <h2 class="section-title">Persönliche Daten</h2>
                     <div class="personal-info">
-                        <div class="personal-info-item" ng-repeat="(key, value) in personalDetails">
-                            <span class="label">{{ key }}:</span>
-                            <span class="value">{{ value }}</span>
+                        <div class="personal-info-item">
+                            <span class="label">Geburtsdatum:</span>
+                            <span class="value">12.06.2004</span>
+                        </div>
+                        <div class="personal-info-item">
+                            <span class="label">Nationalität:</span>
+                            <span class="value">Tunesisch</span>
+                        </div>
+                        <div class="personal-info-item">
+                            <span class="label">Familienstand:</span>
+                            <span class="value">Ledig</span>
+                        </div>
+                        <div class="personal-info-item">
+                            <span class="label">Führerschein:</span>
+                            <span class="value">Klasse B</span>
                         </div>
                     </div>
                 </section>
@@ -39,9 +436,21 @@
                 <section class="section">
                     <h2 class="section-title">Sprachen</h2>
                     <div class="languages">
-                        <div class="language-item" ng-repeat="lang in languages">
-                            <span class="language-name">{{ lang.name }}</span>
-                            <span class="language-level">{{ lang.level }}</span>
+                        <div class="language-item">
+                            <span class="language-name">Arabisch</span>
+                            <span class="language-level">Muttersprache</span>
+                        </div>
+                        <div class="language-item">
+                            <span class="language-name">Französisch</span>
+                            <span class="language-level">C2</span>
+                        </div>
+                        <div class="language-item">
+                            <span class="language-name">Deutsch</span>
+                            <span class="language-level">C1</span>
+                        </div>
+                        <div class="language-item">
+                            <span class="language-name">Englisch</span>
+                            <span class="language-level">B2</span>
                         </div>
                     </div>
                 </section>
@@ -49,10 +458,33 @@
                 <section class="section">
                     <h2 class="section-title">Kenntnisse & Fähigkeiten</h2>
                     <div class="skills">
-                        <div class="skill-category" ng-repeat="category in skillCategories">
-                            <div class="skill-category-title">{{ category.name }}</div>
+                        <div class="skill-category">
+                            <div class="skill-category-title">Programmierung</div>
                             <div class="skill-list">
-                                <span class="skill-tag" ng-repeat="skill in category.skills">{{ skill }}</span>
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">Java</span>
+                                <span class="skill-tag">C++</span>
+                                <span class="skill-tag">HTML</span>
+                                <span class="skill-tag">PHP</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <div class="skill-category-title">Software</div>
+                            <div class="skill-list">
+                                <span class="skill-tag">Microsoft Office</span>
+                                <span class="skill-tag">SAP</span>
+                                <span class="skill-tag">CRM-Systeme</span>
+                                <span class="skill-tag">Ticket-Systeme</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <div class="skill-category-title">Soft Skills</div>
+                            <div class="skill-list">
+                                <span class="skill-tag">Kommunikation</span>
+                                <span class="skill-tag">Teamarbeit</span>
+                                <span class="skill-tag">Flexibilität</span>
+                                <span class="skill-tag">Problemlösung</span>
+                                <span class="skill-tag">Zeitmanagement</span>
                             </div>
                         </div>
                     </div>
@@ -61,7 +493,12 @@
                 <section class="section">
                     <h2 class="section-title">Hobbies</h2>
                     <div class="hobbies">
-                        <span class="hobby-item" ng-repeat="hobby in hobbies">{{ hobby }}</span>
+                        <span class="hobby-item">Schwimmen</span>
+                        <span class="hobby-item">Radfahren</span>
+                        <span class="hobby-item">Tennis</span>
+                        <span class="hobby-item">Basketball</span>
+                        <span class="hobby-item">Boxen</span>
+                        <span class="hobby-item">Gaming</span>
                     </div>
                 </section>
             </aside>
@@ -69,82 +506,90 @@
             <main class="content">
                 <section class="section">
                     <h2 class="section-title">Ausbildung</h2>
-                    <div class="education-item" ng-repeat="edu in education">
-                        <div class="school">{{ edu.school }}</div>
-                        <div class="degree">{{ edu.degree }}</div>
-                        <div class="date">{{ edu.date }}</div>
+                    <div class="education-item">
+                        <div class="school">Hochschule Bielefeld (HSBI)</div>
+                        <div class="degree">Bachelor Informatik - 3. Semester</div>
+                        <div class="date">2024 - heute</div>
+                    </div>
+                    <div class="education-item">
+                        <div class="school">Gymnasium Farhat Hached, Tunis</div>
+                        <div class="degree">Abitur (Informatik)</div>
+                        <div class="date">2023</div>
                     </div>
                 </section>
 
                 <section class="section">
                     <h2 class="section-title">Berufserfahrung</h2>
-                    <div class="experience-item" ng-repeat="exp in experiences">
-                        <div class="company">{{ exp.company }}</div>
-                        <div class="position">{{ exp.position }}</div>
-                        <div class="date">{{ exp.date }}</div>
+                    
+                    <div class="experience-item">
+                        <div class="company">EDEKA Campus Minden Hannover</div>
+                        <div class="position">IT-Spezialist</div>
+                        <div class="date">April 2025</div>
                         <div class="description">
                             <ul>
-                                <li ng-repeat="task in exp.tasks">{{ task }}</li>
+                                <li>IT-Abrechnung und Systemverwaltung</li>
+                                <li>Lagerhaltungssysteme und digitale Prozesse</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="company">Subway Minden, Deutschland</div>
+                        <div class="position">Verkaufsmitarbeiter</div>
+                        <div class="date">Januar 2025 - März 2025</div>
+                        <div class="description">
+                            <ul>
+                                <li>Kassensystem-Bedienung und Kundenbetreuung</li>
+                                <li>Lebensmittelvorbereitung nach Qualitätsstandards</li>
+                                <li>Einhaltung von Hygiene- und Sauberkeitsvorschriften</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="company">REWE To Go Münster (Hbf), Deutschland</div>
+                        <div class="position">Verkaufsmitarbeiter</div>
+                        <div class="date">Juli 2024 - September 2024</div>
+                        <div class="description">
+                            <ul>
+                                <li>Kassensystem-Bedienung und Zahlungsabwicklung</li>
+                                <li>Produktvorbereitung und Warenpräsentation</li>
+                                <li>Lagerorganisation und Inventarverwaltung</li>
+                                <li>Geschäftsräume-Reinigung und -Wartung</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="company">PAYLESS - Pharmavertrieb, Tunis</div>
+                        <div class="position">Lager- und Verkaufsmitarbeiter</div>
+                        <div class="date">Juli 2023 - September 2023</div>
+                        <div class="description">
+                            <ul>
+                                <li>Produkteinlagerung und Lagerorganisation</li>
+                                <li>Kundenberatung und Verkauf von Parapharmazieprodukten</li>
+                                <li>Liefervorbereitung und Verpackungslogistik</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="company">SERBAT für Gebäude, Tunis</div>
+                        <div class="position">Web-Entwickler & Kundenbetreuung</div>
+                        <div class="date">Juli 2022 - September 2022</div>
+                        <div class="description">
+                            <ul>
+                                <li>Kundenkommunikation und Projektberatung</li>
+                                <li>Webseitentwicklung und Content-Management</li>
+                                <li>Technische Unterstützung und Problemlösung</li>
                             </ul>
                         </div>
                     </div>
                 </section>
+
+
             </main>
         </div>
     </div>
-
-    <div class="angular-badge">
-        ⚡ Built with AngularJS
-    </div>
-
-    <script>
-        angular.module('cvApp', []).controller('CVController', function($scope) {
-            $scope.personalData = {
-                name: 'Mohamed Mehdi Abid',
-                title: 'Bachelor Informatik Student'
-            };
-
-            $scope.contactInfo = [
-                { value: 'medabi28@gmail.com', icon: 'M20 4H4c-1.1 0...' },
-                { value: '01622750840', icon: 'M6.62 10.79c1.44...' },
-                { value: 'Schenkendorfstr. 129, 32427 Minden', icon: 'M12 2C8.13...' },
-                { value: 'GitHub', icon: 'M12 0c-6.626...' },
-                { value: 'LinkedIn', icon: 'M20.447 20.452h-3.554...' }
-            ];
-
-            $scope.personalDetails = {
-                'Geburtsdatum': '12.06.2004',
-                'Nationalität': 'Tunesisch',
-                'Familienstand': 'Ledig',
-                'Führerschein': 'Klasse B'
-            };
-
-            $scope.languages = [
-                { name: 'Arabisch', level: 'Muttersprache' },
-                { name: 'Französisch', level: 'C2' },
-                { name: 'Deutsch', level: 'C1' },
-                { name: 'Englisch', level: 'B2' }
-            ];
-
-            $scope.skillCategories = [
-                { name: 'Programmierung', skills: ['Python','Java','C++','HTML','PHP','JavaScript','Angular'] },
-                { name: 'Software', skills: ['Microsoft Office','SAP','CRM-Systeme','Ticket-Systeme'] },
-                { name: 'Soft Skills', skills: ['Kommunikation','Teamarbeit','Flexibilität','Problemlösung','Zeitmanagement'] }
-            ];
-
-            $scope.hobbies = ['Schwimmen','Radfahren','Tennis','Basketball','Boxen','Gaming'];
-
-            $scope.education = [
-                { school: 'Hochschule Bielefeld (HSBI)', degree: 'Bachelor Informatik - 3. Semester', date: '2024 - heute' },
-                { school: 'Gymnasium Farhat Hached, Tunis', degree: 'Abitur (Informatik)', date: '2023' }
-            ];
-
-            $scope.experiences = [
-                { company: 'EDEKA Campus Minden Hannover', position: 'IT-Spezialist', date: 'April 2025', tasks: ['IT-Abrechnung','Lagerhaltungssysteme'] },
-                { company: 'Subway Minden', position: 'Verkaufsmitarbeiter', date: 'Jan 2025 - März 2025', tasks: ['Kassensystem','Lebensmittelvorbereitung','Hygiene'] },
-                { company: 'REWE To Go Münster', position: 'Verkaufsmitarbeiter', date: 'Jul 2024 - Sep 2024', tasks: ['Kassensystem','Produkte','Lager'] }
-            ];
-        });
-    </script>
 </body>
 </html>
