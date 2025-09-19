@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de" ng-app="cvApp" ng-controller="CVController">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohamed Mehdi Abid - CV Angular</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="cv-container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="name">{{ personalData.name }}</h1>
+                <p class="title">{{ personalData.title }}</p>
+                <div class="contact-grid">
+                    <div class="contact-item" ng-repeat="contact in contactInfo">
+                        <svg class="contact-icon" viewBox="0 0 24 24">
+                            <path ng-attr-d="{{ contact.icon }}"></path>
+                        </svg>
+                        {{ contact.value }}
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <aside class="sidebar">
+                <section class="section">
+                    <h2 class="section-title">Persönliche Daten</h2>
+                    <div class="personal-info">
+                        <div class="personal-info-item" ng-repeat="(key, value) in personalDetails">
+                            <span class="label">{{ key }}:</span>
+                            <span class="value">{{ value }}</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Sprachen</h2>
+                    <div class="languages">
+                        <div class="language-item" ng-repeat="lang in languages">
+                            <span class="language-name">{{ lang.name }}</span>
+                            <span class="language-level">{{ lang.level }}</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Kenntnisse & Fähigkeiten</h2>
+                    <div class="skills">
+                        <div class="skill-category" ng-repeat="category in skillCategories">
+                            <div class="skill-category-title">{{ category.name }}</div>
+                            <div class="skill-list">
+                                <span class="skill-tag" ng-repeat="skill in category.skills">{{ skill }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Hobbies</h2>
+                    <div class="hobbies">
+                        <span class="hobby-item" ng-repeat="hobby in hobbies">{{ hobby }}</span>
+                    </div>
+                </section>
+            </aside>
+
+            <main class="content">
+                <section class="section">
+                    <h2 class="section-title">Ausbildung</h2>
+                    <div class="education-item" ng-repeat="edu in education">
+                        <div class="school">{{ edu.school }}</div>
+                        <div class="degree">{{ edu.degree }}</div>
+                        <div class="date">{{ edu.date }}</div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Berufserfahrung</h2>
+                    <div class="experience-item" ng-repeat="exp in experiences">
+                        <div class="company">{{ exp.company }}</div>
+                        <div class="position">{{ exp.position }}</div>
+                        <div class="date">{{ exp.date }}</div>
+                        <div class="description">
+                            <ul>
+                                <li ng-repeat="task in exp.tasks">{{ task }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div class="angular-badge">
+        ⚡ Built with AngularJS
+    </div>
+
+    <script>
+        angular.module('cvApp', []).controller('CVController', function($scope) {
+            $scope.personalData = {
+                name: 'Mohamed Mehdi Abid',
+                title: 'Bachelor Informatik Student'
+            };
+
+            $scope.contactInfo = [
+                { value: 'medabi28@gmail.com', icon: 'M20 4H4c-1.1 0...' },
+                { value: '01622750840', icon: 'M6.62 10.79c1.44...' },
+                { value: 'Schenkendorfstr. 129, 32427 Minden', icon: 'M12 2C8.13...' },
+                { value: 'GitHub', icon: 'M12 0c-6.626...' },
+                { value: 'LinkedIn', icon: 'M20.447 20.452h-3.554...' }
+            ];
+
+            $scope.personalDetails = {
+                'Geburtsdatum': '12.06.2004',
+                'Nationalität': 'Tunesisch',
+                'Familienstand': 'Ledig',
+                'Führerschein': 'Klasse B'
+            };
+
+            $scope.languages = [
+                { name: 'Arabisch', level: 'Muttersprache' },
+                { name: 'Französisch', level: 'C2' },
+                { name: 'Deutsch', level: 'C1' },
+                { name: 'Englisch', level: 'B2' }
+            ];
+
+            $scope.skillCategories = [
+                { name: 'Programmierung', skills: ['Python','Java','C++','HTML','PHP','JavaScript','Angular'] },
+                { name: 'Software', skills: ['Microsoft Office','SAP','CRM-Systeme','Ticket-Systeme'] },
+                { name: 'Soft Skills', skills: ['Kommunikation','Teamarbeit','Flexibilität','Problemlösung','Zeitmanagement'] }
+            ];
+
+            $scope.hobbies = ['Schwimmen','Radfahren','Tennis','Basketball','Boxen','Gaming'];
+
+            $scope.education = [
+                { school: 'Hochschule Bielefeld (HSBI)', degree: 'Bachelor Informatik - 3. Semester', date: '2024 - heute' },
+                { school: 'Gymnasium Farhat Hached, Tunis', degree: 'Abitur (Informatik)', date: '2023' }
+            ];
+
+            $scope.experiences = [
+                { company: 'EDEKA Campus Minden Hannover', position: 'IT-Spezialist', date: 'April 2025', tasks: ['IT-Abrechnung','Lagerhaltungssysteme'] },
+                { company: 'Subway Minden', position: 'Verkaufsmitarbeiter', date: 'Jan 2025 - März 2025', tasks: ['Kassensystem','Lebensmittelvorbereitung','Hygiene'] },
+                { company: 'REWE To Go Münster', position: 'Verkaufsmitarbeiter', date: 'Jul 2024 - Sep 2024', tasks: ['Kassensystem','Produkte','Lager'] }
+            ];
+        });
+    </script>
+</body>
+</html>
